@@ -1,8 +1,8 @@
-const { REST, Routes } = require('discord.js');
+const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 const fs = require('node:fs');
 const clientID = "1083260472410775672",
-    // guildID = "1103190377609035788",
-    token = fs.readFileSync("token.txt", "utf8");
+	// guildID = "1103190377609035788",
+	token = fs.readFileSync("token.txt", "utf8");
 const path = require('node:path');
 
 const commands = [];
@@ -18,10 +18,17 @@ for (const folder of commandFolders) {
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
 		const command = require(filePath);
-		if ('data' in command && 'execute' in command) {
+		if (!("data" in command)) {
+			command.data = new SlashCommandBuilder()
+				.setName(path.basename(filePath, ".js"));
+		} else {
+			command.data.name = path.basename(filePath, ".js");
+		}
+		if ('execute' in command) {
+			command.data.description = command.data.description || command.description || "No description found";
 			commands.push(command.data.toJSON());
 		} else {
-			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+			console.log(`[WARNING] The command at ${filePath} is missing a required "execute" property.`);
 		}
 	}
 }

@@ -1,9 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const stupitify = require("../../stupitify");
+const { stupitify } = require("../../randomStuff");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
         .setDescription(stupitify('i am very stupit'))
         .addStringOption(option =>
             option.setName('input')

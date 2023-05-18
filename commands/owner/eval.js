@@ -1,7 +1,8 @@
 const capcon = require('capture-console');
 const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const allowed = ["956156042398556210", "675492571203764236"];
+const allowed = ["956156042398556210"];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+const stripAnsiCodes = str => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 
 const clean = async (text, interaction) => {
     if (text && text.constructor.name == "Promise")
@@ -18,10 +19,13 @@ const clean = async (text, interaction) => {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
-        .setDescription('ownerownerownerownerosnerownerownetidnfljnsdfuhjvhbfhbv'),
+        .setDescription('evaluation. you evaluator. you')
+        .addBooleanOption(option =>
+            option.setName('no_embed')
+                .setDescription('output the result without an embed')
+                .setRequired(false)),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.editReply("Not allowed");
+        if (!allowed.includes(interaction.user.id)) return interaction.editReply("how dare you even TRY to use this command you mere mortal");
         const modal = new ModalBuilder()
             .setCustomId('evalModel')
             .setTitle('Eval');
@@ -56,6 +60,37 @@ module.exports = {
             const cleaned = await clean(output, interaction);
 
             if (output !== '') {
+                if (!interaction.options.getBoolean("no_embed")) {
+                    await submitted.editReply({
+                        embeds: [
+                            {
+                                title: "Eval Result",
+                                fields: [
+                                    {
+                                        name: "Input",
+                                        value: `\`\`\`js\n${trim(submitted.fields.getTextInputValue('codeInput'), 1024)}\n\`\`\``
+                                    },
+                                    {
+                                        name: "Output",
+                                        value: `\`\`\`xz\n${stripAnsiCodes(trim(cleaned, 1024))}\n\`\`\``
+                                    }
+                                ],
+                                color: 0x00ff00
+                            }
+                        ]
+                    });
+                } else {
+                    await submitted.editReply(trim(cleaned, 1024));
+                }
+            } else {
+                await submitted.deleteReply();
+                await submitted.followUp({
+                    content: `<@!${interaction.user.id}> Done`,
+                    ephemeral: true
+                });
+            }
+        } catch (err) {
+            if (!interaction.options.getBoolean("no_embed")) {
                 await submitted.editReply({
                     embeds: [
                         {
@@ -67,35 +102,16 @@ module.exports = {
                                 },
                                 {
                                     name: "Output",
-                                    value: `\`\`\`xz\n${trim(cleaned, 1024)}\n\`\`\``
+                                    value: `\`\`\`ansi\n\u001b[31m${trim(err.stack, 1024)}\u001b[0m\n\`\`\``
                                 }
                             ],
-                            color: 0x00ff00
+                            color: 0xff0000
                         }
                     ]
                 });
             } else {
-                await submitted.deleteReply();
+                await submitted.editReply(trim(err, 1024));
             }
-        } catch (err) {
-            await submitted.editReply({
-                embeds: [
-                    {
-                        title: "Eval Result",
-                        fields: [
-                            {
-                                name: "Input",
-                                value: `\`\`\`js\n${trim(submitted.fields.getTextInputValue('codeInput'), 1024)}\n\`\`\``
-                            },
-                            {
-                                name: "Output",
-                                value: `\`\`\`ansi\n\u001b[31m${trim(err, 1024)}\u001b[0m\n\`\`\``
-                            }
-                        ],
-                        color: 0xff0000
-                    }
-                ]
-            });
         }
         capcon.stopCapture(process.stdout);
     },

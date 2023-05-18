@@ -38,6 +38,20 @@ module.exports = {
         } catch (error) {
             console.error(`Error executing ${interaction.commandName}`);
             console.error(error);
+            // console.error(typeof error);
+            // console.error(error.toString());
+            // console.error(JSON.stringify(error));
+            // console.error(convertToText(error));
+            // console.error(error.stack);
+            await interaction.reply({
+                embeds: [
+                    {
+                        title: `Error executing /${interaction.commandName}!`,
+                        description: `\`\`\`ansi\n\u001b[31m${error.stack}\u001b[0m\n\`\`\``,
+                        color: 0xff0000
+                    }
+                ]
+            });
         }
     },
 };

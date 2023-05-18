@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
         .setDescription('remove ansi from your text')
         .addStringOption(option =>
             option.setName('input')

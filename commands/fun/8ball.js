@@ -25,7 +25,6 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
         .setDescription('8ball will tell your future')
         .addStringOption(option =>
             option.setName('question')

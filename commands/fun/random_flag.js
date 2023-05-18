@@ -1,15 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
-const charset = "abcdefghijklmnopqrstuvwxyz";
-
-function generate() {
-    return charset.charAt(Math.floor(Math.random() * charset.length)) + charset.charAt(Math.floor(Math.random() * charset.length));
-}
+const { genRandLetters } = require("../../randomStuff");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
-        .setDescription('random flag'),
+        .setDescription('Tries to make a random flag'),
     async execute(interaction) {
-        await interaction.reply(":flag_" + generate() + ":");
+        await interaction.reply(`:flag_${genRandLetters(2)}:`);
     },
 };

@@ -3,7 +3,6 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
         .setDescription('rock paper scissors')
         .addStringOption(option =>
             option.setName("rpsr")

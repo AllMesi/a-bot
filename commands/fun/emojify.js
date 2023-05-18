@@ -6,7 +6,6 @@ function isLetter(str) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(__filename.slice(__dirname.length + 1, -3))
         .setDescription('emojifies a string')
         .addStringOption(option =>
             option.setName('input')
