@@ -55,8 +55,8 @@ process.on("uncaughtException", (e) => {
     console.error(e);
 });
 
-client.login(fs.readFileSync("token.txt", "utf8"));
-
 module.exports = {
     addCommands: () => addCommands
 };
+
+client.login(fs.readFileSync("token.txt", "utf8"));
