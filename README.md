@@ -8,7 +8,7 @@ git clone LINK
 cd a-bot
 ```
 
-You also have to install node, to do so run this command:
+You also have to install the node dependencies, to do so run this command:
 ```sh
 npm i
 ```
