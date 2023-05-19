@@ -1,6 +1,6 @@
 const capcon = require('capture-console');
 const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const allowed = ["956156042398556210"];
+const allowed = ["956156042398556210", "675492571203764236"];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 const stripAnsiCodes = str => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 
@@ -84,10 +84,6 @@ module.exports = {
                 }
             } else {
                 await submitted.deleteReply();
-                await submitted.followUp({
-                    content: `<@!${interaction.user.id}> Done`,
-                    ephemeral: true
-                });
             }
         } catch (err) {
             if (!interaction.options.getBoolean("no_embed")) {

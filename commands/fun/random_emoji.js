@@ -5,6 +5,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setDescription('random emoji'),
     async execute(interaction) {
-        await interaction.reply(emojis[Math.floor(Math.random() * emojis.length)]());
+        await interaction.reply(emojis[Math.floor(Math.random() * emojis.length)]);
     },
 };

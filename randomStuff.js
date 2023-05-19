@@ -15,4 +15,12 @@ module.exports = {
         }
         return letters.join("");
     },
+    reverse: (input) => {
+        var letters = [];
+        for (let i = 0; i < input.length; i++) {
+            letters.push(input.charAt(i));
+        }
+        letters.reverse();
+        return letters.join("");
+    }
 };
