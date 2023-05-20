@@ -1,5 +1,6 @@
 # a bot
 Made with stupidity by allmesi#5039
+README.md made by TeemSucks on github
 ## install & run
 
 To download and install a bot run these following commands in command prompt:

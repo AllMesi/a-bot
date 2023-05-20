@@ -55,8 +55,19 @@ process.on("uncaughtException", (e) => {
     console.error(e);
 });
 
-module.exports = {
-    addCommands: () => addCommands
-};
+process.once('SIGINT', function(code) {
+    console.log('SIGINT received...');
+    client.user.setStatus('invisible');
+    client.destroy();
+    console.log(`Process exited with code ${code}`);
+});
+process.once('SIGTERM', function(code) {
+    console.log('SIGTERM received...');
+    client.user.setStatus('invisible');
+    client.destroy();
+    console.log(`Process exited with code ${code}`);
+});
+
+module.exports = addCommands;
 
 client.login(fs.readFileSync("token.txt", "utf8"));
