@@ -29,4 +29,4 @@ at least 100 mb of free ram
 
 ## support
 If you need help with any of the steps above, have a question, or want to talk with like-minded people you can join our suport server.
-https://discord.gg/auvr4UBHGM
+https://discord.gg/nZq5g2Rr6S
