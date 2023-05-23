@@ -2,7 +2,6 @@ const capcon = require('capture-console');
 const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const allowed = ["956156042398556210", "675492571203764236"];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-const stripAnsiCodes = str => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 
 const clean = async (text, interaction) => {
     if (text && text.constructor.name == "Promise")
@@ -72,7 +71,7 @@ module.exports = {
                                     },
                                     {
                                         name: "Output",
-                                        value: `\`\`\`xz\n${stripAnsiCodes(trim(cleaned, 1024))}\n\`\`\``
+                                        value: `\`\`\`ansi\n${trim(cleaned, 1000)}\n\`\`\``
                                     }
                                 ],
                                 color: 0x00ff00

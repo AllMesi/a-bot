@@ -1,9 +1,18 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setDescription('s'),
+    description: "Show info about the bot",
     async execute(interaction) {
+        const addBot = new ButtonBuilder()
+            .setLabel('Add a bot to your server')
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://discord.com/api/oauth2/authorize?client_id=1083260472410775672&permissions=8&scope=bot%20applications.commands");
+
+        const github = new ButtonBuilder()
+            .setLabel('Github')
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://github.com/AllMesi/a-bot");
+
         const date = Date();
         const new_date = new Date(date);
         const hours = new_date.getHours();
@@ -19,11 +28,16 @@ module.exports = {
         let seconds2 = Math.floor(totalSeconds2 % 60);
         let uptime = `${days2} days, ${hours2} hours, ${minutes2} minutes and ${seconds2} seconds`;
         const embed = new EmbedBuilder()
-            .setTitle('Stats')
-            .setDescription("Time: " + time24h + "\nUptime: " + uptime)
-            .setColor('#FF2D00');
+            .setTitle('Info')
+            .setDescription(`Time: ${time24h}\nUptime: ${uptime}\nServers: ${interaction.client.guilds.cache.size}\nChannels: ${interaction.client.channels.cache.size}\nDiscord.js version: ${require("discord.js/package.json").version}`)
+            .setColor(0xff2d00);
+
+        const row = new ActionRowBuilder()
+            .addComponents(addBot, github);
+
         interaction.reply({
-            embeds: [embed]
+            embeds: [embed],
+            components: [row]
         });
     },
 };
