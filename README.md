@@ -15,7 +15,10 @@ You also have to install the dependencies, to do so run this command:
 npm i
 ```
 
-After downloading the files make a new text file called __token.txt__. put your bots token in it.
+After downloading the files make a new text file called __.env__. use this: 
+```env
+token="<YOUR BOT TOKEN>"
+```
 
 You can get your bots token from the discord developer portal. https://discord.com/developers/applications
 

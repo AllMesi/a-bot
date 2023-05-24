@@ -1,3 +1,4 @@
+require("dotenv").config();
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits, SlashCommandBuilder } = require('discord.js');
@@ -69,9 +70,6 @@ process.once('SIGTERM', function (code) {
     console.log(`Process exited with code ${code}`);
 });
 
-// client.on('debug', console.log)
-//     .on('warn', console.log);
-
 module.exports = addCommands;
 
-client.login(fs.readFileSync("token.txt", "utf8"));
+client.login(process.env.token);
