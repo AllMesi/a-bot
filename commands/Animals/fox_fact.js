@@ -1,10 +1,8 @@
-const link = 'https://catfact.ninja/fact';
+const link = 'https://some-random-api.com/facts/fox';
 const fetch = require("node-fetch");
-const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setDescription('cat fact'),
+    description: "i love foxes <3",
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
@@ -12,7 +10,7 @@ module.exports = {
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random cat fact",
+                    title: "Random fox fact",
                     description: JSON.parse(data).fact,
                     footer: {
                         icon_url: interaction.user.avatarURL(),

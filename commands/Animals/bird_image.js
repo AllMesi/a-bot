@@ -1,8 +1,10 @@
-const link = 'https://randomfox.ca/floof/';
+const link = 'https://some-random-api.com/img/bird';
 const fetch = require("node-fetch");
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    description: "i love foxes <3",
+    data: new SlashCommandBuilder()
+        .setDescription('BIRB!'),
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
@@ -10,9 +12,9 @@ module.exports = {
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random fox picture",
+                    title: "Random bird picture",
                     image: {
-                        url: JSON.parse(data).image
+                        url: JSON.parse(data).link
                     },
                     footer: {
                         icon_url: interaction.user.avatarURL(),

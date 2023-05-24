@@ -1,10 +1,10 @@
-const link = 'https://shibe.online/api/birds';
+const link = 'https://some-random-api.com/facts/dog';
 const fetch = require("node-fetch");
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setDescription('BIRB!'),
+        .setDescription('doggy woggy'),
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
@@ -12,13 +12,11 @@ module.exports = {
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random bird picture",
-                    image: {
-                        url: JSON.parse(data)[0]
-                    },
+                    title: "Random dog fact",
+                    description: JSON.parse(data).fact,
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: interaction.user.tag + " • image by " + link
+                        text: interaction.user.tag + " • fact by " + link
                     },
                     color: 0x7289DA
                 }

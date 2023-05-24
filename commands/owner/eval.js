@@ -2,6 +2,7 @@ const capcon = require('capture-console');
 const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const allowed = ["956156042398556210", "675492571203764236"];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+const neatStack = require('neat-stack');
 
 const clean = async (text, interaction) => {
     if (text && text.constructor.name == "Promise")
@@ -22,6 +23,10 @@ module.exports = {
         .addBooleanOption(option =>
             option.setName('no_embed')
                 .setDescription('output the result without an embed')
+                .setRequired(false))
+        .addBooleanOption(option =>
+            option.setName('async')
+                .setDescription('wrap the code in an async block')
                 .setRequired(false)),
     async execute(interaction) {
         if (!allowed.includes(interaction.user.id)) return interaction.editReply("how dare you even TRY to use this command you mere mortal");
@@ -51,7 +56,10 @@ module.exports = {
         });
         try {
             // Evaluate (execute) our input
-            let codeText = submitted.fields.getTextInputValue('codeInput');
+            var codeText = submitted.fields.getTextInputValue('codeInput');
+            if (interaction.options.getBoolean("async")) {
+                codeText = `(async () => {\n\t${codeText.replaceAll("\n", "\n\t")}\n})();`;
+            }
             await eval(codeText);
 
             // Put our eval result through the function
@@ -67,7 +75,7 @@ module.exports = {
                                 fields: [
                                     {
                                         name: "Input",
-                                        value: `\`\`\`js\n${trim(submitted.fields.getTextInputValue('codeInput'), 1024)}\n\`\`\``
+                                        value: `\`\`\`js\n${trim(codeText, 1000)}\n\`\`\``
                                     },
                                     {
                                         name: "Output",
@@ -79,7 +87,7 @@ module.exports = {
                         ]
                     });
                 } else {
-                    await submitted.editReply(trim(cleaned, 1024));
+                    await submitted.editReply(trim(cleaned, 1000));
                 }
             } else {
                 await submitted.deleteReply();
@@ -93,11 +101,11 @@ module.exports = {
                             fields: [
                                 {
                                     name: "Input",
-                                    value: `\`\`\`js\n${trim(submitted.fields.getTextInputValue('codeInput'), 1024)}\n\`\`\``
+                                    value: `\`\`\`js\n${trim(codeText, 1000)}\n\`\`\``
                                 },
                                 {
                                     name: "Output",
-                                    value: `\`\`\`ansi\n\u001b[31m${trim(err.stack, 1024)}\u001b[0m\n\`\`\``
+                                    value: `\`\`\`ansi\n\u001b[31mError!\u001b[0m\n\n${trim(neatStack(err), 1000)}\n\`\`\``
                                 }
                             ],
                             color: 0xff0000

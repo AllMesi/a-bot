@@ -1,18 +1,8 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     description: "Show info about the bot",
     async execute(interaction) {
-        const addBot = new ButtonBuilder()
-            .setLabel('Add a bot to your server')
-            .setStyle(ButtonStyle.Link)
-            .setURL("https://discord.com/api/oauth2/authorize?client_id=1083260472410775672&permissions=8&scope=bot%20applications.commands");
-
-        const github = new ButtonBuilder()
-            .setLabel('Github')
-            .setStyle(ButtonStyle.Link)
-            .setURL("https://github.com/AllMesi/a-bot");
-
         const date = Date();
         const new_date = new Date(date);
         const hours = new_date.getHours();
@@ -32,12 +22,8 @@ module.exports = {
             .setDescription(`Time: ${time24h}\nUptime: ${uptime}\nServers: ${interaction.client.guilds.cache.size}\nChannels: ${interaction.client.channels.cache.size}\nDiscord.js version: ${require("discord.js/package.json").version}`)
             .setColor(0xff2d00);
 
-        const row = new ActionRowBuilder()
-            .addComponents(addBot, github);
-
         interaction.reply({
-            embeds: [embed],
-            components: [row]
+            embeds: [embed]
         });
     },
 };

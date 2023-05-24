@@ -1,10 +1,10 @@
-const link = 'https://dogapi.dog/api/v2/facts/';
+const link = 'https://some-random-api.com/img/dog';
 const fetch = require("node-fetch");
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setDescription('doggy woggy'),
+        .setDescription('DOG !!!!!! !11!1'),
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
@@ -12,11 +12,13 @@ module.exports = {
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random dog fact",
-                    description: JSON.parse(data).data[0].attributes.body,
+                    title: "Random dog picture",
+                    image: {
+                        url: JSON.parse(data).link
+                    },
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: interaction.user.tag + " • fact by " + link
+                        text: interaction.user.tag + " • image by " + link
                     },
                     color: 0x7289DA
                 }

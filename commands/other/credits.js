@@ -13,6 +13,11 @@ module.exports = {
             .setStyle(ButtonStyle.Link)
             .setURL("https://github.com/AllMesi/a-bot");
 
+        const discord = new ButtonBuilder()
+            .setLabel('Join the discord server')
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://discord.gg/nZq5g2Rr6S");
+
         const embed = new EmbedBuilder()
             .setTitle('Credits')
             .setDescription(`a bot made with stupidity by:`)
@@ -25,9 +30,12 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(addBot, github);
 
+        const row2 = new ActionRowBuilder()
+            .addComponents(discord);
+
         interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row, row2]
         });
     },
 };

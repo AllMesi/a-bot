@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits, SlashCommandBuilder } = require('discord.js');
+const neatStack = require('neat-stack');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
 
@@ -52,7 +53,7 @@ for (const file of eventFiles) {
 }
 
 process.on("uncaughtException", (e) => {
-    console.error(e);
+    console.error(neatStack(e));
 });
 
 process.once('SIGINT', function (code) {

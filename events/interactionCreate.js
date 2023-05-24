@@ -1,4 +1,6 @@
+const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 const { Collection } = require('discord.js');
+const neatStack = require('neat-stack');
 
 module.exports = {
     async execute(interaction) {
@@ -37,7 +39,7 @@ module.exports = {
                 await command.execute(interaction);
             } catch (error) {
                 console.error(`Error executing ${interaction.commandName}`);
-                console.error(error);
+                console.error(neatStack(error));
                 // console.error(typeof error);
                 // console.error(error.toString());
                 // console.error(JSON.stringify(error));
@@ -47,7 +49,7 @@ module.exports = {
                     embeds: [
                         {
                             title: `Error executing /${interaction.commandName}!`,
-                            description: `\`\`\`ansi\n\u001b[31m${error.stack}\u001b[0m\n\`\`\``,
+                            description: `\`\`\`ansi\n\u001b[31mError!\u001b[0m\n\n${trim(neatStack(error), 1000)}\n\`\`\``,
                             color: 0xff0000
                         }
                     ]
