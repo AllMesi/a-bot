@@ -4,7 +4,14 @@ const path = require('node:path');
 const { Client, Collection, GatewayIntentBits, SlashCommandBuilder } = require('discord.js');
 const neatStack = require('neat-stack');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMessages
+    ]
+});
 
 client.cooldowns = new Collection();
 
@@ -57,17 +64,14 @@ process.on("uncaughtException", (e) => {
     console.error(neatStack(e));
 });
 
-process.once('SIGINT', function (code) {
-    console.log('SIGINT received...');
+process.once('SIGINT', function() {
     client.user.setStatus('invisible');
     client.destroy();
-    console.log(`Process exited with code ${code}`);
 });
-process.once('SIGTERM', function (code) {
-    console.log('SIGTERM received...');
+
+process.once('SIGTERM', function() {
     client.user.setStatus('invisible');
     client.destroy();
-    console.log(`Process exited with code ${code}`);
 });
 
 module.exports = addCommands;

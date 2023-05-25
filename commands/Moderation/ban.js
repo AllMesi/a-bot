@@ -33,13 +33,11 @@ module.exports = {
             });
 
         if (interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
-            await member.ban(reason).then(() => {
-                member.send(`You've been banned from \`${interaction.guild.name}\` for reason: \`${reason}\``).then(() => {
-                    interaction.reply({
-                        content: `You banned \`${member.tag}\` for reason: \`${reason}\``,
-                        ephemeral: true
-                    });
-                });
+            await member.ban(reason);
+            await member.send(`You've been banned from \`${interaction.guild.name}\` for reason: \`${reason}\``);
+            return await interaction.reply({
+                content: `You banned \`${member.tag}\` for reason: \`${reason}\``,
+                ephemeral: true
             });
         } else {
             await interaction.reply({

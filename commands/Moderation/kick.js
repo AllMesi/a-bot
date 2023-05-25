@@ -33,13 +33,11 @@ module.exports = {
             });
 
         if (interaction.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
-            await member.kick(reason).then(() => {
-                member.send(`You've been kicked from \`${interaction.guild.name}\` for reason: \`${reason}\``).then(() => {
-                    interaction.reply({
-                        content: `You kicked \`${member.tag}\` for reason: \`${reason}\``,
-                        ephemeral: true
-                    });
-                });
+            await member.kick(reason);
+            await member.send(`You've been kicked from \`${interaction.guild.name}\` for reason: \`${reason}\``);
+            return await interaction.reply({
+                content: `You kicked \`${member.tag}\` for reason: \`${reason}\``,
+                ephemeral: true
             });
         } else {
             await interaction.reply({

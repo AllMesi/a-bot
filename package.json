@@ -12,9 +12,9 @@
     "neat-stack": "^1.0.1",
     "node-fetch": "^2.6.6",
     "pet-pet-gif": "^1.0.9",
+    "sequelize": "^6.31.1",
     "sodium-native": "^4.0.1",
-    "somerandomapi.js": "^1.6.0",
-    "undici": "^5.22.1",
+    "sqlite3": "^5.1.6",
     "utf-8-validate": "^6.0.3",
     "zlib-sync": "^0.1.8"
   },
