@@ -9,11 +9,13 @@ module.exports = {
                 .setDescription('The user to pet')
                 .setRequired(false)),
     async execute(interaction) {
+        await interaction.deferReply();
+        
         const avatar = (interaction.options.getUser("user") || interaction.user).displayAvatarURL({ extension: 'png' });
 
         const animatedGif = await petPetGif(avatar);
 
-        interaction.reply({
+        interaction.editReply({
             files: [
                 new AttachmentBuilder(animatedGif, {
                     name: "petpet.gif"

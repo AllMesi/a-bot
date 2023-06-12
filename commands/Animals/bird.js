@@ -1,20 +1,21 @@
-const link = 'https://some-random-api.com/facts/panda';
+const link = 'https://some-random-api.com/animal/bird';
 const fetch = require("node-fetch");
 
 module.exports = {
-    description: "panda",
+    description: "birb",
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
-        const data = await response.text();
+        const { image, fact } = await response.json();
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random panda fact",
-                    description: JSON.parse(data).fact,
+                    image: {
+                        url: image
+                    },
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: interaction.user.tag + " • fact by " + link
+                        text: fact
                     },
                     color: 0x7289DA
                 }

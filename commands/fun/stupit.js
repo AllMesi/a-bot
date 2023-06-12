@@ -3,7 +3,7 @@ const { stupitify } = require("../../randomStuff");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setDescription(stupitify('i am very stupit'))
+        .setDescription(stupitify('stupitify your text'))
         .addStringOption(option =>
             option.setName('input')
                 .setDescription('The input to make stupit')

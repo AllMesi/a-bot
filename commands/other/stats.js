@@ -16,10 +16,13 @@ module.exports = {
         totalSeconds2 %= 3600;
         let minutes2 = Math.floor(totalSeconds2 / 60);
         let seconds2 = Math.floor(totalSeconds2 % 60);
+        var memUsage = 0;
+        const mem = process.memoryUsage();
+        memUsage = mem.heapTotal + mem.heapUsed;
         let uptime = `${days2} days, ${hours2} hours, ${minutes2} minutes and ${seconds2} seconds`;
         const embed = new EmbedBuilder()
             .setTitle('Info')
-            .setDescription(`Time: ${time24h}\nUptime: ${uptime}\nServers: ${interaction.client.guilds.cache.size}\nChannels: ${interaction.client.channels.cache.size}\nDiscord.js version: ${require("discord.js/package.json").version}`)
+            .setDescription(`**Time:** ${time24h}\n**Uptime:** ${uptime}\n**Ram usage:** ${+(memUsage / 1e+6).toFixed(2)}mb\n**Servers:** ${interaction.client.guilds.cache.size}\n**Channels:** ${interaction.client.channels.cache.size}\n**Discord.js version:** ${require("discord.js/package.json").version}`)
             .setColor(0xff2d00);
 
         interaction.reply({

@@ -1,8 +1,7 @@
+require("dotenv").config();
 const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 const fs = require('node:fs');
-const clientID = "1083260472410775672",
-	// guildID = "1103190377609035788",
-	token = fs.readFileSync("token.txt", "utf8");
+const clientID = "1083260472410775672";
 const path = require('node:path');
 
 const commands = [];
@@ -34,7 +33,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(token);
+const rest = new REST().setToken(process.env.token);
 
 // and deploy your commands!
 (async () => {

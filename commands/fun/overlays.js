@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -31,6 +31,11 @@ module.exports = {
             subcommand
                 .setName('wasted')
                 .setDescription('D:')
+                .addUserOption(option => option.setName('user').setDescription('user')))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('horny')
+                .setDescription('???')
                 .addUserOption(option => option.setName('user').setDescription('user'))),
     async execute(interaction) {
         const subCommand = interaction.options.getSubcommand();
@@ -40,62 +45,44 @@ module.exports = {
 
         switch (subCommand) {
             case "triggered": {
-                const image = new AttachmentBuilder(`https://some-random-api.com/canvas/overlay/triggered/?avatar=${avatar}`, {
-                    name: "triggered.gif"
-                });
-
                 await interaction.editReply({
-                    files: [image]
+                    files: [`https://some-random-api.com/canvas/overlay/triggered/?avatar=${avatar}`]
                 });
                 break;
             }
             case "comrade": {
-                const image = new AttachmentBuilder(`https://some-random-api.com/canvas/overlay/comrade/?avatar=${avatar}`, {
-                    name: "comrade.png"
-                });
-
                 await interaction.editReply({
-                    files: [image]
+                    files: [`https://some-random-api.com/canvas/overlay/comrade/?avatar=${avatar}`]
                 });
                 break;
             }
             case "gay": {
-                const image = new AttachmentBuilder(`https://some-random-api.com/canvas/overlay/gay/?avatar=${avatar}`, {
-                    name: "gay.png"
-                });
-
                 await interaction.editReply({
-                    files: [image]
+                    files: [`https://some-random-api.com/canvas/overlay/gay/?avatar=${avatar}`]
                 });
                 break;
             }
             case "jail": {
-                const image = new AttachmentBuilder(`https://some-random-api.com/canvas/overlay/jail/?avatar=${avatar}`, {
-                    name: "jail.png"
-                });
-
                 await interaction.editReply({
-                    files: [image]
+                    files: [`https://some-random-api.com/canvas/overlay/jail/?avatar=${avatar}`]
                 });
                 break;
             }
             case "passed": {
-                const image = new AttachmentBuilder(`https://some-random-api.com/canvas/overlay/passed/?avatar=${avatar}`, {
-                    name: "passed.png"
-                });
-
                 await interaction.editReply({
-                    files: [image]
+                    files: [`https://some-random-api.com/canvas/overlay/passed/?avatar=${avatar}`]
                 });
                 break;
             }
             case "wasted": {
-                const image = new AttachmentBuilder(`https://some-random-api.com/canvas/overlay/wasted/?avatar=${avatar}`, {
-                    name: "wasted.png"
-                });
-
                 await interaction.editReply({
-                    files: [image]
+                    files: [`https://some-random-api.com/canvas/overlay/wasted/?avatar=${avatar}`]
+                });
+                break;
+            }
+            case "horny": {
+                await interaction.editReply({
+                    files: [`https://some-random-api.com/canvas/misc/horny/?avatar=${avatar}`]
                 });
                 break;
             }

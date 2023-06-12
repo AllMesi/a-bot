@@ -30,7 +30,11 @@ npm start
 ## requirements
 node v16.9.0 or higher
 
-at least 100 mb of free ram
+at least 4gb of free ram
+
+windows 10 (if on windows)
+
+10gb free space
 
 ## support
 If you need help with any of the steps above, have a question, or want to talk with like-minded people you can join our support server.

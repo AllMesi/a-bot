@@ -1,22 +1,21 @@
-const link = 'https://some-random-api.com/facts/bird';
+const link = 'https://some-random-api.com/animal/cat';
 const fetch = require("node-fetch");
-const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setDescription('BIRB!'),
+    description: "catty",
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
-        const data = await response.text();
+        const { image, fact } = await response.json();
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random birb fact",
-                    description: JSON.parse(data).fact,
+                    image: {
+                        url: image
+                    },
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: interaction.user.tag + " • fact by " + link
+                        text: fact
                     },
                     color: 0x7289DA
                 }

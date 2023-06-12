@@ -1,24 +1,21 @@
-const link = 'https://some-random-api.com/img/cat';
+const link = 'https://some-random-api.com/animal/kangaroo';
 const fetch = require("node-fetch");
-const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setDescription('omgomg cat'),
+    description: "kangrooooo",
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
-        const data = await response.text();
+        const { image, fact } = await response.json();
         await interaction.editReply({
             embeds: [
                 {
-                    title: "Random cat picture",
                     image: {
-                        url: JSON.parse(data).link
+                        url: image
                     },
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: interaction.user.tag + " • image by " + link
+                        text: fact
                     },
                     color: 0x7289DA
                 }
