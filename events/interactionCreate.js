@@ -40,11 +40,6 @@ module.exports = {
             } catch (error) {
                 console.error(`Error executing ${interaction.commandName}`);
                 console.error(neatStack(error));
-                // console.error(typeof error);
-                // console.error(error.toString());
-                // console.error(JSON.stringify(error));
-                // console.error(convertToText(error));
-                // console.error(error.stack);
                 await interaction.reply({
                     embeds: [
                         {
@@ -56,32 +51,48 @@ module.exports = {
                 });
             }
         } else if (interaction.isButton()) {
-            const id = interaction.customId;
-            var categories = [];
-            var commands = [];
+            let id = interaction.customId;
+            if (id.startsWith("help-")) {
+                id = id.slice(5);
+                var categories = [];
+                var commands = [];
 
-            interaction.client.commands.forEach(command => {
-                if (command.category === id) {
-                    commands.push(`</${command.name}:${command.id}> - ${command.description}`);
-                }
-            });
-
-            interaction.client.commands.forEach(command => {
-                if (!categories.includes(command.category)) {
-                    categories.push(command.category);
-                    if (command.category === "Owner") return;
-                    if (id == command.category) {
-                        interaction.update({
-                            embeds: [{
-                                title: `Help (${command.category})`,
-                                description: commands.join("\n"),
-                                color: 0xff2d00
-                            }]
-                        });
-                        return;
+                interaction.client.commands.forEach(command => {
+                    if (command.category === id) {
+                        commands.push(`</${command.name}:${command.id}> - ${command.description}`);
                     }
-                }
-            });
+                });
+
+                interaction.client.commands.forEach(command => {
+                    if (!categories.includes(command.category)) {
+                        categories.push(command.category);
+                        if (command.category === "Owner") return;
+                        if (id == command.category) {
+                            interaction.update({
+                                embeds: [{
+                                    title: `Help (${command.category})`,
+                                    description: commands.join("\n"),
+                                    color: 0xff2d00
+                                }]
+                            });
+                            return;
+                        }
+                    }
+                });
+            }
+        } else if (interaction.isAutocomplete()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
+
+            try {
+                await command.autocomplete(interaction);
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
 };

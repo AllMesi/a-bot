@@ -22,8 +22,8 @@ module.exports = {
             .setTitle('Credits')
             .setDescription(`a bot made with stupidity by:`)
             .addFields(
-                { name: "Owners", value: "allmesi#5039" },
-                { name: "Contributors", value: "catboy#7027" }
+                { name: "Owners", value: "allmesi" },
+                { name: "Contributors", value: "cat.boy." }
             )
             .setColor(0xff2d00);
 

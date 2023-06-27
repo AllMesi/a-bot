@@ -15,7 +15,7 @@ module.exports = {
                     },
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: fact
+                        text: fact + " | https://some-random-api.com"
                     },
                     color: 0x7289DA
                 }

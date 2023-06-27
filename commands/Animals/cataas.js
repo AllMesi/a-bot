@@ -1,21 +1,21 @@
-const link = 'https://some-random-api.com/animal/panda';
+const link = 'https://cataas.com/cat?json=true';
 const fetch = require("node-fetch");
 
 module.exports = {
-    description: "pamda",
+    description: "cataas",
     async execute(interaction) {
         await interaction.deferReply();
         const response = await fetch(link);
-        const { image, fact } = await response.json();
+        const { tags, url } = await response.json();
         await interaction.editReply({
             embeds: [
                 {
                     image: {
-                        url: image
+                        url: `https://cataas.com${url}`
                     },
                     footer: {
                         icon_url: interaction.user.avatarURL(),
-                        text: fact + " | https://some-random-api.com"
+                        text: `Tags: ${(tags.length === 0 ? "No tags" : tags.join(", "))} | https://cataas.com`
                     },
                     color: 0x7289DA
                 }

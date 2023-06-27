@@ -13,7 +13,7 @@ module.exports = {
                 if (command.category === "Owner") return;
                 buttons.push(
                     new ButtonBuilder()
-                        .setCustomId(command.category)
+                        .setCustomId("help-" + command.category)
                         .setLabel(command.category)
                         .setStyle(ButtonStyle.Success)
                 );

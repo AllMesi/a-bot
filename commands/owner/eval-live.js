@@ -34,6 +34,9 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction) {
         if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
+
+        var limit = false;
+
         const modal = new ModalBuilder()
             .setCustomId('evalModel')
             .setTitle('Eval');
@@ -55,23 +58,17 @@ module.exports = {
         });
         await submitted.deferReply();
         var output = '';
-        capcon.startCapture(process.stdout, function (stdout) {
+        capcon.startCapture(process.stdout, async (stdout) => {
             output += stdout;
-        });
-        let codeText = submitted.fields.getTextInputValue('codeInput');
-        const noAnsi = interaction.options.getBoolean("no_ansi");
-        try {
-            // Evaluate (execute) our input
-            if (interaction.options.getBoolean("async")) {
-                codeText = `(async () => {\n\t${codeText.replaceAll("\n", "\n\t")}\n})();`;
-            }
-            await eval(codeText);
-
-            // Put our eval result through the function
-            // we defined above
             const cleaned = await clean(output, interaction);
-
-            if (output !== '') {
+            const show = trim((noAnsi ? cleaned.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000);
+            // console.log(show.length);
+            if (show.length === 1000) {
+                limit = true;
+            } else {
+                limit = false;
+            }
+            if (!limit) {
                 if (!interaction.options.getBoolean("no_embed")) {
                     await submitted.editReply({
                         embeds: [
@@ -84,8 +81,7 @@ module.exports = {
                                     },
                                     {
                                         name: "Output",
-                                        value: `\`\`\`ansi\n${trim((noAnsi ? cleaned.replace(
-                                            /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000)}\n\`\`\``
+                                        value: `\`\`\`ansi\n${show}\n\`\`\``
                                     }
                                 ],
                                 color: 0x00ff00
@@ -93,12 +89,37 @@ module.exports = {
                         ]
                     });
                 } else {
-                    await submitted.editReply(trim((noAnsi ? cleaned.replace(
-                        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000));
+                    await submitted.editReply(trim(cleaned.replace(
+                        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''), 1000));
                 }
-            } else {
-                await submitted.deleteReply();
             }
+        });
+        let codeText = submitted.fields.getTextInputValue('codeInput');
+        const noAnsi = interaction.options.getBoolean("no_ansi");
+        await submitted.editReply({
+            embeds: [
+                {
+                    title: "Eval Result",
+                    fields: [
+                        {
+                            name: "Input",
+                            value: `\`\`\`js\n${trim(codeText, 1000)}\n\`\`\``
+                        },
+                        {
+                            name: "Output",
+                            value: `\`\`\` \`\`\``
+                        }
+                    ],
+                    color: 0xffa500
+                }
+            ]
+        });
+        try {
+            // Evaluate (execute) our input
+            if (interaction.options.getBoolean("async")) {
+                codeText = `(async () => {\n\t${codeText.replaceAll("\n", "\n\t")}\n})();`;
+            }
+            await eval(codeText);
         } catch (err) {
             if (!interaction.options.getBoolean("no_embed")) {
                 const error = neatStack(err);
@@ -122,10 +143,14 @@ module.exports = {
                     ]
                 });
             } else {
-                await submitted.editReply(trim((noAnsi ? err.replace(
-                    /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : err), 1024));
+                await submitted.editReply(trim(`Error!\n\n${err}`.replace(
+                    /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''), 1024));
             }
         }
         capcon.stopCapture(process.stdout);
+
+        if (output === "") {
+            await submitted.deleteReply();
+        }
     },
 };

@@ -31,18 +31,18 @@ for (const file of eventFiles) {
     } else {
         client.on(event.name, (...args) => event.execute(...args));
     }
-}   
+}
 
 process.on("uncaughtException", (e) => {
     console.error(neatStack(e));
 });
 
-process.once('SIGINT', function() {
+process.once('SIGINT', function () {
     client.user.setStatus('invisible');
     client.destroy();
 });
 
-process.once('SIGTERM', function() {
+process.once('SIGTERM', function () {
     client.user.setStatus('invisible');
     client.destroy();
 });
