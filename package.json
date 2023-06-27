@@ -12,6 +12,7 @@
     "neat-stack": "^1.0.1",
     "node-fetch": "^2.6.6",
     "pet-pet-gif": "^1.0.9",
+    "popcat-wrapper": "^1.5.5",
     "request": "^2.88.2",
     "sequelize": "^6.31.1",
     "sodium-native": "^4.0.1",

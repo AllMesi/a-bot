@@ -72,7 +72,7 @@ module.exports = {
                                 embeds: [{
                                     title: `Help (${command.category})`,
                                     description: commands.join("\n"),
-                                    color: 0xff2d00
+                                    color: 0x7289DA
                                 }]
                             });
                             return;

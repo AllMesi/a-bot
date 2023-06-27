@@ -17,19 +17,17 @@ module.exports = {
                         .setLabel(command.category)
                         .setStyle(ButtonStyle.Success)
                 );
-                if (buttons.length > 4) {
-                    buttonRows.push(new ActionRowBuilder().addComponents(buttons));
-                    buttons = [];
-                }
             }
         });
+
+        buttonRows.push(new ActionRowBuilder().addComponents(buttons));
 
         await interaction.reply({
             components: buttonRows,
             embeds: [{
                 title: `Help`,
                 description: "Click on a button to show commands for a category",
-                color: 0xff2d00
+                color: 0x7289DA
             }]
         });
     },

@@ -20,7 +20,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle('Stats')
             .setDescription(`**Date:** ${time24h}\n**Uptime:** ${uptime}\n**Ram usage:** ${+(memUsage / 1e+6).toFixed(2)}mb\n**Servers:** ${interaction.client.guilds.cache.size}\n**Channels:** ${interaction.client.channels.cache.size}\n**Discord.js version:** ${require("discord.js/package.json").version}`)
-            .setColor(0xff2d00);
+            .setColor(0x7289DA);
 
         interaction.reply({
             embeds: [embed]

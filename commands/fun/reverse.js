@@ -3,7 +3,7 @@ const { reverse } = require("../../randomStuff");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setDescription("Reverse some text")
+        .setDescription(reverse("reverse some text"))
         .addStringOption(option =>
             option.setName("input")
                 .setDescription("The string to reverse")
