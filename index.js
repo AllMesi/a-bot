@@ -5,6 +5,13 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const neatStack = require('neat-stack');
 const { addCommands } = require("./addCommands");
 
+// const pastebinAPI = require('pastebin-ts');
+// global.pastebin = new pastebinAPI({
+//     'api_dev_key': process.env.pastebin,
+//     'api_user_name': 'PastebinUserName',
+//     'api_user_password': 'PastebinPassword'
+// });
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,

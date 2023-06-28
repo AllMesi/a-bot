@@ -24,7 +24,7 @@ module.exports = {
             .addFields(
                 { name: "Owners", value: "[allmesi](https://discord.com/users/956156042398556210)" },
                 { name: "Contributors", value: "[cat.boy.](https://discord.com/users/675492571203764236)" },
-                { name: "More", value: "[discord.js](https://discord.js.org)\n[Sorrygle](https://github.com/JJoriping/Sorrygle)\n[Some Random Api](https://some-random-api.com)\n[Cat as a service](https://cataas.com)\n[popcat.xyz](https://popcat.xyz)" }
+                { name: "More", value: "[discord.js](https://discord.js.org)\n[Some Random Api](https://some-random-api.com)\n[Cat as a service](https://cataas.com)\n[popcat.xyz](https://popcat.xyz)" }
             )
             .setColor(0x7289DA);
 
