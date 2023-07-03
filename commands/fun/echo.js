@@ -29,14 +29,22 @@ module.exports = {
                         value: "false"
                     }
                 ])
+        )
+        .addIntegerOption(option =>
+            option.setName("delete_time")
+                .setDescription("If this has a numbers then delete the message after the amount of seconds")
+                .setRequired(false)
+                .setMinValue(1)
+                .setMaxValue(2147483647)
         ),
     async execute(interaction) {
-        await interaction.deferReply({
-            ephemeral: true
-        });
+        const deleteTime = interaction.options.getInteger("delete_time");
+        let deleteMessage;
         if (!interaction.options.getString("message_reply_id")) {
-            interaction.guild.channels.cache.get((interaction.options.getChannel("channel") ? interaction.options.getChannel("channel").id : null) || interaction.channel.id).send({
+            deleteMessage = interaction.guild.channels.cache.get((interaction.options.getChannel("channel") ? interaction.options.getChannel("channel").id : null) || interaction.channel.id).send({
                 content: interaction.options.getString('input')
+            }).then(message => {
+                deleteMessage = message;
             });
         } else {
             const mrp = interaction.options.getString("message_reply_ping");
@@ -47,12 +55,25 @@ module.exports = {
                             repliedUser: (mrp === "true" ? true : (mrp === "false" ? false : true)) // this is very readable
                         },
                         content: interaction.options.getString('input')
+                    }).then(message => {
+                        deleteMessage = message;
                     });
                 });
         }
-        await interaction.editReply({
-            content: "Done",
-            ephemeral: true
-        });
+        if (typeof deleteTime === "number") {
+            interaction.reply({
+                content: `Time left: <t:${Math.floor(new Date().getTime() / 1000) + deleteTime}:R>`,
+                ephemeral: true
+            });
+            setTimeout(async () => {
+                interaction.deleteReply();
+                deleteMessage.delete();
+            }, deleteTime * 1000);
+        } else {
+            interaction.reply({
+                content: "Done",
+                ephemeral: true
+            });
+        }
     },
 };

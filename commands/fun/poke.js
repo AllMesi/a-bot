@@ -9,7 +9,7 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         interaction.options.getUser("pokepoke").send(`<@${interaction.user.id}> poked you xd`);
-        await interaction.reply({
+        interaction.reply({
             content: `you poked <@${interaction.options.getUser("pokepoke").id}> xd`,
             ephemeral: true
         });
