@@ -33,7 +33,7 @@ module.exports = {
                 .setDescription('strip all ansi from the output')
                 .setRequired(false)),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.rzeply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         const modal = new ModalBuilder()
             .setCustomId('evalModel')
             .setTitle('Eval');
