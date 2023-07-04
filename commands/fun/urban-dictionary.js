@@ -14,7 +14,7 @@ module.exports = {
         const term = interaction.options.getString('term');
         const query = new URLSearchParams({ term });
         const dictResult = await request(`https://api.urbandictionary.com/v0/define?${query}`);
-        const { list } = await dictResult.body.json();
+        let { list } = await dictResult.body.json();
         let page = 0;
         const buttons = new ActionRowBuilder();
         buttons.addComponents(...[
@@ -63,7 +63,7 @@ module.exports = {
                         }
                     }
                 ],
-                components: [buttons]
+                components: (list.length > 1 ? [buttons] : [])
             });
         };
 
@@ -86,7 +86,7 @@ module.exports = {
                     }
                 }
             ],
-            components: [buttons]
+            components: (list.length > 1 ? [buttons] : [])
         });
         const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
         collector.on('collect', async i => {
