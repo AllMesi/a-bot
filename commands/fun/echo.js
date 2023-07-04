@@ -38,6 +38,9 @@ module.exports = {
                 .setMaxValue(2147483647)
         ),
     async execute(interaction) {
+        await interaction.deferReply({
+            ephemeral: true
+        });
         const deleteTime = interaction.options.getInteger("delete_time");
         let deleteMessage;
         if (!interaction.options.getString("message_reply_id")) {
@@ -61,7 +64,7 @@ module.exports = {
                 });
         }
         if (typeof deleteTime === "number") {
-            interaction.reply({
+            interaction.editReply({
                 content: `Time left: <t:${Math.floor(new Date().getTime() / 1000) + deleteTime}:R>`,
                 ephemeral: true
             });
@@ -70,10 +73,7 @@ module.exports = {
                 deleteMessage.delete();
             }, deleteTime * 1000);
         } else {
-            interaction.reply({
-                content: "Done",
-                ephemeral: true
-            });
+            interaction.deleteReply();
         }
     },
 };

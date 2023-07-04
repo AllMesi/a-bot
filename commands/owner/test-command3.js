@@ -19,7 +19,7 @@ module.exports = {
         const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
         collector.on('collect', i => {
             if (i.user.id === interaction.user.id) {
-                i.update(`${i.user.tag} clicked on the ${i.customId} button.`);
+                i.update(`${i.user.username} clicked on the ${i.customId} button.`);
             } else {
                 i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
             }

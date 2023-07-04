@@ -14,6 +14,6 @@ module.exports = {
         setInterval(() => {
             client.user.setActivity(`${client.guilds.cache.size} servers`, { type: ActivityType.Watching });
         }, 60000);
-        console.log(`Ready! Logged in as ${client.user.tag}`);
+        console.log(`Ready! Logged in as ${client.user.username}`);
     },
 };

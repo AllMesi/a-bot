@@ -40,6 +40,10 @@ for (const file of eventFiles) {
     }
 }
 
+client.rest.on('rateLimited', (rateLimitInfo) => {
+    console.log("Rate Limited!\n", rateLimitInfo);
+});
+
 process.on("uncaughtException", (e) => {
     console.error(neatStack(e));
 });
