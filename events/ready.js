@@ -10,9 +10,12 @@ module.exports = {
                 client.commands.get(command.name).description = command.description;
             });
         });
-        client.user.setActivity(`${client.guilds.cache.size} servers`, { type: ActivityType.Watching });
+        const date = new Date();
+        client.user.setActivity(`${client.guilds.cache.size} servers ${(date.getMonth() + 1 === 7 /*july*/ ? ` | ${27 - date.getDate()} days until 727 day` : "")}`, { type: ActivityType.Watching });
         setInterval(() => {
-            client.user.setActivity(`${client.guilds.cache.size} servers`, { type: ActivityType.Watching });
+            const date = new Date();
+            client.user.setActivity(`${client.guilds.cache.size} servers ${(date.getMonth() + 1 === 7 /*july*/ ? ` | ${27 - date.getDate()} days until 727 day` : "")}`, { type: ActivityType.Watching });
+            // client.user.setActivity(`${client.guilds.cache.size} servers`, { type: ActivityType.Watching });
         }, 60000);
         console.log(`Ready! Logged in as ${client.user.username}`);
     },
