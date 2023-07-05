@@ -18,7 +18,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.editReply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         await interaction.deferReply();
         const ip = interaction.options.getString('ip');
         fetch(`https://worldtimeapi.org/api/ip/${ip}`).then(result => {

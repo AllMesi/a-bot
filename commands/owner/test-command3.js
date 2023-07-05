@@ -4,7 +4,7 @@ const allowed = ["956156042398556210", "675492571203764236"];
 module.exports = {
     description: 'testing',
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.editReply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         let buttons = new ActionRowBuilder();
         for (let i = 0; i < 5; i++) {
             buttons.addComponents(new ButtonBuilder()

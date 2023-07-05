@@ -9,7 +9,7 @@ module.exports = {
                 .setDescription('The command to reload.')
                 .setRequired(true)),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.editReply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         const commandName = interaction.options.getString('command_name', true).toLowerCase();
         const command = interaction.client.commands.get(commandName);
 

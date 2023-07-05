@@ -26,7 +26,7 @@ module.exports = {
                 .setAutocomplete(true)
         ),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.editReply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         await interaction.deferReply();
         const timezone = interaction.options.getString('timezone');
         if (!timezones.includes(timezone)) {

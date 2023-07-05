@@ -3,6 +3,7 @@ const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, T
 const allowed = ["956156042398556210", "675492571203764236"];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 const neatStack = require('neat-stack');
+const fs = require("fs");
 
 const clean = async (text, interaction) => {
     if (text && text.constructor.name == "Promise")
@@ -31,34 +32,48 @@ module.exports = {
         .addBooleanOption(option =>
             option.setName('no_ansi')
                 .setDescription('strip all ansi from the output')
-                .setRequired(false)),
+                .setRequired(false))
+        .addStringOption(option =>
+            option.setName('template')
+                .setDescription('choose code template')
+                .setRequired(false)
+                .setAutocomplete(true)
+        ),
     async execute(interaction) {
         if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
-        const modal = new ModalBuilder()
-            .setCustomId('evalModel')
-            .setTitle('Eval');
+        const templateCode = interaction.options.getString('template');
+        let codeText;
+        let submitted;
+        if (templateCode === null) {
+            const modal = new ModalBuilder()
+                .setCustomId('evalModel')
+                .setTitle('Eval');
 
-        const codeInput = new TextInputBuilder()
-            .setCustomId('codeInput')
-            .setLabel("Enter code:")
-            .setStyle(TextInputStyle.Paragraph);
+            const codeInput = new TextInputBuilder()
+                .setCustomId('codeInput')
+                .setLabel("Enter code:")
+                .setStyle(TextInputStyle.Paragraph);
 
-        const code = new ActionRowBuilder().addComponents(codeInput);
-        modal.addComponents(code);
+            const code = new ActionRowBuilder().addComponents(codeInput);
+            modal.addComponents(code);
 
-        await interaction.showModal(modal);
-        const submitted = await interaction.awaitModalSubmit({
-            time: 2147483647,
-        }).catch(error => {
-            console.error(error);
-            return null;
-        });
-        await submitted.deferReply();
-        var output = '';
+            await interaction.showModal(modal);
+            submitted = await interaction.awaitModalSubmit({
+                time: 2147483647,
+            }).catch(error => {
+                console.error(error);
+                return null;
+            });
+            await submitted.deferReply();
+            var output = '';
+            codeText = submitted.fields.getTextInputValue('codeInput');
+        } else {
+            await interaction.deferReply();
+            codeText = fs.readFileSync(`./evalCodeTemplates/${templateCode}`, "utf8");
+        }
         capcon.startCapture(process.stdout, function (stdout) {
             output += stdout;
         });
-        let codeText = submitted.fields.getTextInputValue('codeInput');
         const noAnsi = interaction.options.getBoolean("no_ansi");
         try {
             // Evaluate (execute) our input
@@ -73,7 +88,7 @@ module.exports = {
 
             if (output !== '') {
                 if (!interaction.options.getBoolean("no_embed")) {
-                    await submitted.editReply({
+                    await (templateCode ? interaction : submitted).editReply({
                         embeds: [
                             {
                                 title: "Eval Result",
@@ -85,7 +100,7 @@ module.exports = {
                                     {
                                         name: "Output",
                                         value: `\`\`\`ansi\n${trim((noAnsi ? cleaned.replace(
-                                            /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000)}\n\`\`\``
+                                            /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').slice((templateCode ? 9 : 0)) : cleaned.slice((templateCode ? 9 : 0))), 1000)}\n\`\`\``
                                     }
                                 ],
                                 color: 0x00ff00
@@ -93,16 +108,16 @@ module.exports = {
                         ]
                     });
                 } else {
-                    await submitted.editReply(trim((noAnsi ? cleaned.replace(
-                        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000));
+                    await (templateCode ? interaction : submitted).editReply(trim((noAnsi ? cleaned.replace(
+                        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').slice((templateCode ? 9 : 0)) : cleaned.slice((templateCode ? 9 : 0))), 1000));
                 }
             } else {
-                await submitted.deleteReply();
+                await (templateCode ? interaction : submitted).deleteReply();
             }
         } catch (err) {
             if (!interaction.options.getBoolean("no_embed")) {
                 const error = neatStack(err);
-                await submitted.editReply({
+                await (templateCode ? interaction : submitted).editReply({
                     embeds: [
                         {
                             title: "Eval Result",
@@ -122,10 +137,27 @@ module.exports = {
                     ]
                 });
             } else {
-                await submitted.editReply(trim((noAnsi ? err.replace(
+                await (templateCode ? interaction : submitted).editReply(trim((noAnsi ? err.replace(
                     /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : err), 1024));
             }
         }
         capcon.stopCapture(process.stdout);
+    },
+    async autocomplete(interaction) {
+        const templates = fs.readdirSync("evalCodeTemplates");
+        const focusedOption = interaction.options.getFocused(true);
+
+        const filtered = templates.filter(choice => choice.toLowerCase().includes(focusedOption.value.toLowerCase()));
+
+        let options;
+        if (filtered.length > 25) {
+            options = filtered.slice(0, 25);
+        } else {
+            options = filtered;
+        }
+
+        await interaction.respond(
+            options.map(choice => ({ name: choice.split("/").reverse().map(name => name).join(", "), value: choice })),
+        );
     },
 };
