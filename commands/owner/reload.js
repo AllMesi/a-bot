@@ -7,7 +7,8 @@ module.exports = {
         .addStringOption(option =>
             option.setName('command_name')
                 .setDescription('The command to reload.')
-                .setRequired(true)),
+                .setRequired(true)
+                .setAutocomplete(true)),
     async execute(interaction) {
         if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         const commandName = interaction.options.getString('command_name', true).toLowerCase();
@@ -36,5 +37,23 @@ module.exports = {
             console.error(error);
             await interaction.reply(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.stack}\``);
         }
+    },
+    async autocomplete(interaction) {
+        const focusedOption = interaction.options.getFocused(true);
+
+        const filtered = interaction.client.commands.filter(choice => choice.data.name.toLowerCase().includes(focusedOption.value.toLowerCase()));
+
+        let options;
+        if (filtered.length > 25) {
+            options = filtered.slice(0, 25);
+            console.log(filtered.length);
+            console.log(options.length);
+        } else {
+            options = filtered;
+        }
+
+        await interaction.respond(
+            options.map(choice => ({ name: choice.data.name, value: choice.data.name })),
+        );
     },
 };

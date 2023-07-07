@@ -2,7 +2,6 @@ require("dotenv").config();
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const neatStack = require('neat-stack');
 const { addCommands } = require("./addCommands");
 
 // const pastebinAPI = require('pastebin-ts');
@@ -45,7 +44,7 @@ client.rest.on('rateLimited', (rateLimitInfo) => {
 });
 
 process.on("uncaughtException", (e) => {
-    console.error(neatStack(e));
+    console.error(e.stack);
 });
 
 process.once('SIGINT', function () {

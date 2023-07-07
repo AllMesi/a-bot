@@ -1,8 +1,7 @@
 const capcon = require('capture-console');
 const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const allowed = ["956156042398556210", "675492571203764236"];
+const allowed = ["956156042398556210", "675492571203764236" ];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-const neatStack = require('neat-stack');
 const fs = require("fs");
 
 const clean = async (text, interaction) => {
@@ -42,35 +41,29 @@ module.exports = {
     async execute(interaction) {
         if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
         const templateCode = interaction.options.getString('template');
-        let codeText;
-        let submitted;
-        if (templateCode === null) {
-            const modal = new ModalBuilder()
-                .setCustomId('evalModel')
-                .setTitle('Eval');
+        const modal = new ModalBuilder()
+            .setCustomId('evalModal')
+            .setTitle('Eval');
 
-            const codeInput = new TextInputBuilder()
-                .setCustomId('codeInput')
-                .setLabel("Enter code:")
-                .setStyle(TextInputStyle.Paragraph);
+        const codeInput = new TextInputBuilder()
+            .setCustomId('codeInput')
+            .setLabel("Enter code:")
+            .setValue((templateCode ? fs.readFileSync(`./evalCodeTemplates/${templateCode}`, "utf8") : ""))
+            .setStyle(TextInputStyle.Paragraph);
 
-            const code = new ActionRowBuilder().addComponents(codeInput);
-            modal.addComponents(code);
+        const code = new ActionRowBuilder().addComponents(codeInput);
+        modal.addComponents(code);
 
-            await interaction.showModal(modal);
-            submitted = await interaction.awaitModalSubmit({
-                time: 2147483647,
-            }).catch(error => {
-                console.error(error);
-                return null;
-            });
-            await submitted.deferReply();
-            var output = '';
-            codeText = submitted.fields.getTextInputValue('codeInput');
-        } else {
-            await interaction.deferReply();
-            codeText = fs.readFileSync(`./evalCodeTemplates/${templateCode}`, "utf8");
-        }
+        await interaction.showModal(modal);
+        const submitted = await interaction.awaitModalSubmit({
+            time: 2147483647,
+        }).catch(error => {
+            console.error(error);
+            return null;
+        });
+        await submitted.deferReply();
+        var output = '';
+        let codeText = submitted.fields.getTextInputValue('codeInput');
         capcon.startCapture(process.stdout, function (stdout) {
             output += stdout;
         });
@@ -88,7 +81,7 @@ module.exports = {
 
             if (output !== '') {
                 if (!interaction.options.getBoolean("no_embed")) {
-                    await (templateCode ? interaction : submitted).editReply({
+                    await submitted.editReply({
                         embeds: [
                             {
                                 title: "Eval Result",
@@ -100,7 +93,7 @@ module.exports = {
                                     {
                                         name: "Output",
                                         value: `\`\`\`ansi\n${trim((noAnsi ? cleaned.replace(
-                                            /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').slice((templateCode ? 9 : 0)) : cleaned.slice((templateCode ? 9 : 0))), 1000)}\n\`\`\``
+                                            /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000)}\n\`\`\``
                                     }
                                 ],
                                 color: 0x00ff00
@@ -108,16 +101,16 @@ module.exports = {
                         ]
                     });
                 } else {
-                    await (templateCode ? interaction : submitted).editReply(trim((noAnsi ? cleaned.replace(
-                        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').slice((templateCode ? 9 : 0)) : cleaned.slice((templateCode ? 9 : 0))), 1000));
+                    await submitted.editReply(trim((noAnsi ? cleaned.replace(
+                        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : cleaned), 1000));
                 }
             } else {
-                await (templateCode ? interaction : submitted).deleteReply();
+                await submitted.deleteReply();
             }
         } catch (err) {
             if (!interaction.options.getBoolean("no_embed")) {
-                const error = neatStack(err);
-                await (templateCode ? interaction : submitted).editReply({
+                const error = err.stack;
+                await submitted.editReply({
                     embeds: [
                         {
                             title: "Eval Result",
@@ -137,7 +130,7 @@ module.exports = {
                     ]
                 });
             } else {
-                await (templateCode ? interaction : submitted).editReply(trim((noAnsi ? err.replace(
+                await submitted.editReply(trim((noAnsi ? err.replace(
                     /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : err), 1024));
             }
         }
