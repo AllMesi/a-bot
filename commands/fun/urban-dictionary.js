@@ -60,23 +60,24 @@ module.exports = {
             return interaction.editReply("No results found");
         }
 
-        const changePage = async (i, page) => {
-            const definition = list[page].definition.replace(/[[\]]+/g, '');
-            const example = list[page].example.replace(/[[\]]+/g, '');
+        const changePage = async (i, newPage) => {
+            page = newPage;
+            const definition = list[newPage].definition.replace(/[[\]]+/g, '');
+            const example = list[newPage].example.replace(/[[\]]+/g, '');
             await i.editReply({
                 embeds: [
                     {
                         color: 0x7289DA,
-                        title: list[page].word,
-                        url: list[page].permalink,
+                        title: list[newPage].word,
+                        url: list[newPage].permalink,
                         fields: [
-                            { name: 'Definition', value: trim(definition, 1024, list[page].permalink) },
-                            { name: 'Example', value: trim(example, 1024, list[page].permalink) },
-                            { name: 'Rating', value: `👍 ${list[page].thumbs_up} 👎 ${list[page].thumbs_down}` }
+                            { name: 'Definition', value: trim(definition, 1024, list[newPage].permalink) },
+                            { name: 'Example', value: trim(example, 1024, list[newPage].permalink) },
+                            { name: 'Rating', value: `👍 ${list[newPage].thumbs_up} 👎 ${list[newPage].thumbs_down}` }
                         ],
                         footer: {
                             icon_url: i.user.avatarURL() || `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 5)}.png`,
-                            text: `Page ${(Number(page) + 1)}/${list.length}`
+                            text: `Page ${(Number(newPage) + 1)}/${list.length}`
                         }
                     }
                 ],
@@ -84,7 +85,7 @@ module.exports = {
             });
         };
 
-        const changePageModal = async (i) => {
+        const changePageModal = async (i, list, changePage) => {
             const modal = new ModalBuilder()
                 .setCustomId('pageModal')
                 .setTitle('Page');
@@ -149,23 +150,24 @@ module.exports = {
             const dictResult = await request(`https://api.urbandictionary.com/v0/define?${query}`);
             const { list } = await dictResult.body.json();
             let page = 0;
-            const changePage = async (i, page) => {
-                const definition = list[page].definition.replace(/[[\]]+/g, '');
-                const example = list[page].example.replace(/[[\]]+/g, '');
+            const changePage = async (i, newPage) => {
+                page = newPage;
+                const definition = list[newPage].definition.replace(/[[\]]+/g, '');
+                const example = list[newPage].example.replace(/[[\]]+/g, '');
                 await i.editReply({
                     embeds: [
                         {
                             color: 0x7289DA,
-                            title: list[page].word,
-                            url: list[page].permalink,
+                            title: list[newPage].word,
+                            url: list[newPage].permalink,
                             fields: [
-                                { name: 'Definition', value: trim(definition, 1024, list[page].permalink) },
-                                { name: 'Example', value: trim(example, 1024, list[page].permalink) },
-                                { name: 'Rating', value: `👍 ${list[page].thumbs_up} 👎 ${list[page].thumbs_down}` }
+                                { name: 'Definition', value: trim(definition, 1024, list[newPage].permalink) },
+                                { name: 'Example', value: trim(example, 1024, list[newPage].permalink) },
+                                { name: 'Rating', value: `👍 ${list[newPage].thumbs_up} 👎 ${list[newPage].thumbs_down}` }
                             ],
                             footer: {
                                 icon_url: i.user.avatarURL() || `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 5)}.png`,
-                                text: `Page ${(Number(page) + 1)}/${list.length}`
+                                text: `Page ${(Number(newPage) + 1)}/${list.length}`
                             }
                         }
                     ],
@@ -199,10 +201,10 @@ module.exports = {
             const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
             collector.on('collect', async i => {
                 if (i.customId === "page") {
-                    changePageModal(i);
+                    changePageModal(i, list, changePage);
                     return;
                 } else if (i.customId === "new") {
-                    newTermModal(i);
+                    newTermModal(i, list, changePage);
                     return;
                 }
                 await i.deferUpdate();
@@ -247,7 +249,7 @@ module.exports = {
         const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 600000 });
         collector.on('collect', async i => {
             if (i.customId === "page") {
-                changePageModal(i);
+                changePageModal(i, list, changePage);
                 return;
             } else if (i.customId === "new") {
                 newTermModal(i);
