@@ -9,16 +9,14 @@ const isValidUrl = urlString => {
     }
 };
 
+const isValidHex = hex => typeof hex === 'string' && hex.length === 6 && !isNaN(Number('0x' + hex));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setDescription("Make a bot say something")
         .addStringOption(option =>
             option.setName('content')
-                .setDescription('The text in the message')
-                .setRequired(true))
-        .addBooleanOption(option =>
-            option.setName('has_embed')
-                .setDescription('Does the message have an embed? (Default: False)')
+                .setDescription('The text in the message (default: None)')
                 .setRequired(false))
         .addStringOption(option =>
             option.setName('title')
@@ -69,18 +67,37 @@ module.exports = {
         )
         .addIntegerOption(option =>
             option.setName("delete_time")
-                .setDescription("If this has a numbers then delete the message after the amount of seconds")
+                .setDescription("If this has a numbers then delete the message after the amount of seconds (default: No deletion)")
                 .setRequired(false)
                 .setMinValue(1)
                 .setMaxValue(600)
-        ),
+        )
+        .addAttachmentOption(option =>
+            option.setName("attachment1")
+                .setDescription("Add an attachment to the message (default: None)")
+                .setRequired(false))
+        .addAttachmentOption(option =>
+            option.setName("attachment2")
+                .setDescription("Add an attachment to the message (default: None)")
+                .setRequired(false))
+        .addAttachmentOption(option =>
+            option.setName("attachment3")
+                .setDescription("Add an attachment to the message (default: None)")
+                .setRequired(false))
+        .addAttachmentOption(option =>
+            option.setName("attachment4")
+                .setDescription("Add an attachment to the message (default: None)")
+                .setRequired(false))
+        .addAttachmentOption(option =>
+            option.setName("attachment5")
+                .setDescription("Add an attachment to the message (default: None)")
+                .setRequired(false)),
     async execute(interaction) {
         await interaction.deferReply({
             ephemeral: true
         });
-        // variable hell!!
+        // variable hell
         const avatar = interaction.user.displayAvatarURL({ extension: 'png' });
-        const hasEmbed = interaction.options.getBoolean("has_embed");
         const title = interaction.options.getString("title");
         const description = interaction.options.getString("description");
         const footer = interaction.options.getString("footer") || null;
@@ -89,16 +106,24 @@ module.exports = {
         const url = interaction.options.getString("url");
         const content = interaction.options.getString("content") || "";
         const deleteTime = interaction.options.getInteger("delete_time");
+        let attachments = [];
+        for (let i = 1; i <= 5; i++) {
+            const attachment = interaction.options.getAttachment(`attachment${i}`);
+            if (attachment !== null) {
+                attachments.push(attachment.url);
+            }
+        }
+        let hasEmbed = (title !== null || description !== null || footer !== null || footer_pfp !== null || colour !== null || url !== null);
         let deleteMessage;
-        if (hasEmbed && title === null) {
+        if (hasEmbed && title === null && description === null) {
             return await interaction.editReply({
-                content: "The embed must have a title",
+                content: "The embed must have a title or description",
                 ephemeral: true
             });
         }
-        if (colour !== null && hasEmbed && colour.length !== 6 && colour.length !== 7) {
+        if (colour !== null && hasEmbed && !isValidHex(colour)) {
             return await interaction.editReply({
-                content: "Colour must be 6-7 chars",
+                content: "Colour must be valid",
                 ephemeral: true
             });
         }
@@ -122,7 +147,8 @@ module.exports = {
                                 iconURL: footer_pfp
                             })
                             .setColor(colour)
-                    ] : null)
+                    ] : null),
+                    files: attachments
                 }).then(message => {
                     deleteMessage = message;
                 });
@@ -147,7 +173,8 @@ module.exports = {
                                         iconURL: footer_pfp
                                     })
                                     .setColor(colour)
-                            ] : null)
+                            ] : null),
+                            files: attachments
                         }).then(message => {
                             deleteMessage = message;
                         });

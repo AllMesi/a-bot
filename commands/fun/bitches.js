@@ -11,7 +11,7 @@ module.exports = {
         await interaction.deferReply();
         const no = interaction.options.getString("no");
         const query = new URLSearchParams({ no });
-        const image = new AttachmentBuilder(`https://some-random-api.com/canvas/misc/nobitches?no=${query.toString().slice(3)}`, {
+        const image = new AttachmentBuilder(`https://some-random-api.com/canvas/misc/nobitches?${query.toString()}`, {
             name: "bitches.png"
         });
 
