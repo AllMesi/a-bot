@@ -50,11 +50,13 @@ process.on("uncaughtException", (e) => {
 process.once('SIGINT', function () {
     client.user.setStatus('invisible');
     client.destroy();
+    process.exit();
 });
 
 process.once('SIGTERM', function () {
     client.user.setStatus('invisible');
     client.destroy();
+    process.exit();
 });
 
 client.login(process.env.token);

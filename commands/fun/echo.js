@@ -106,6 +106,7 @@ module.exports = {
         const url = interaction.options.getString("url");
         const content = interaction.options.getString("content") || "";
         const deleteTime = interaction.options.getInteger("delete_time");
+        const channel = interaction.options.getChannel("channel");
         let attachments = [];
         for (let i = 1; i <= 5; i++) {
             const attachment = interaction.options.getAttachment(`attachment${i}`);
@@ -134,7 +135,7 @@ module.exports = {
             });
         }
         if (!interaction.options.getString("message_reply_id")) {
-            interaction.guild.channels.fetch((interaction.options.getChannel("channel") ? interaction.options.getChannel("channel").id : null) || interaction.channel.id).then(channel => {
+            interaction.guild.channels.fetch((channel ? channel.id : null) || interaction.channel.id).then(channel => {
                 channel.send({
                     content: content,
                     embeds: (hasEmbed ? [
@@ -155,7 +156,7 @@ module.exports = {
             });
         } else {
             const mrp = interaction.options.getString("message_reply_ping");
-            interaction.guild.channels.fetch((interaction.options.getChannel("channel") ? interaction.options.getChannel("channel").id : null) || interaction.channel.id).then(channel => {
+            interaction.guild.channels.fetch((channel ? channel.id : null) || interaction.channel.id).then(channel => {
                 channel.messages.fetch(interaction.options.getString("message_reply_id"))
                     .then(msg => {
                         msg.reply({
@@ -181,17 +182,16 @@ module.exports = {
                     });
             });
         }
+        // const provided = `Provided Command: \`/echo ${(content ? `content:${content}` : "")} ${(title ? `title:${title}` : "")} ${(description ? `description:${description}` : "")} ${(footer ? `footer:${footer}` : "")} ${(footer_pfp ? `footer_pfp:${footer_pfp}` : "")} ${(colour ? `colour:${colour}` : "")} ${(deleteTime ? `delete_time:${deleteTime}` : "")} ${(channel ? `channel:\`${channel}\`` : "")} ${(messageReplyID ? `message_reply_id:${messageReplyID}` : "")} ${(messageReplyPing ? `message_reply_ping:${messageReplyPing}` : "")}\``;
         if (typeof deleteTime === "number") {
-            interaction.editReply({
-                content: `Time left: <t:${Math.floor(new Date().getTime() / 1000) + deleteTime}:R>`,
-                ephemeral: true
-            });
+            const time = Math.floor(new Date().getTime() / 1000) + deleteTime;
+            interaction.editReply(`Done\nTime left: <t:${time}:R>`);
             setTimeout(async () => {
-                interaction.deleteReply();
+                interaction.editReply(`Deleted: <t:${time}:R>`);
                 deleteMessage.delete();
             }, deleteTime * 1000);
         } else {
-            interaction.deleteReply();
+            interaction.editReply("Done");
         }
     },
 };

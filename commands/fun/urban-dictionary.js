@@ -1,5 +1,5 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType, SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const trim = (str, max, link) => (str.length > max ? `${str.slice(0, max - 3 - 1 - 6 - 2 - link.length)}... [more](${link})` : str);
+const trim = (str, max, link) => (str.length > max ? `${str.slice(0, max - 12 - link.length)}... [more](${link})` : str);
 const { request } = require('undici');
 
 module.exports = {
