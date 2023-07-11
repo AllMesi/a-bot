@@ -75,8 +75,8 @@ module.exports = {
             let id = interaction.customId;
             if (id.startsWith("help-")) {
                 id = id.slice(5);
-                var categories = [];
-                var commands = [];
+                let categories = [];
+                let commands = [];
 
                 interaction.client.commands.forEach(command => {
                     if (command.category === id) {

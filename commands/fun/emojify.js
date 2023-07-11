@@ -20,7 +20,7 @@ module.exports = {
                 .setDescription('The input to emojify')
                 .setRequired(true)),
     async execute(interaction) {
-        var regTable = [];
+        let regTable = [];
         const input = interaction.options.getString('input');
         for (let i = 0; i < input.length; i++) {
             const char = input.charAt(i);

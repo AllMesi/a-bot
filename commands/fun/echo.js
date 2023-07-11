@@ -137,7 +137,10 @@ module.exports = {
         if (!interaction.options.getString("message_reply_id")) {
             interaction.guild.channels.fetch((channel ? channel.id : null) || interaction.channel.id).then(channel => {
                 channel.send({
-                    content: content,
+                    allowedMentions: {
+                        users: []
+                    },
+                    content: content.replace("@everyone", "@\u200beveryone"),
                     embeds: (hasEmbed ? [
                         new EmbedBuilder()
                             .setTitle(title)
@@ -161,9 +164,10 @@ module.exports = {
                     .then(msg => {
                         msg.reply({
                             allowedMentions: {
-                                repliedUser: (mrp === "true" ? true : (mrp === "false" ? false : true)) // this is very readable
+                                repliedUser: (mrp === "true" ? true : (mrp === "false" ? false : true)), // this is very readable
+                                users: []
                             },
-                            content: content,
+                            content: content.replace("@everyone", "@\u200beveryone"),
                             embeds: (hasEmbed ? [
                                 new EmbedBuilder()
                                     .setTitle(title)
@@ -182,7 +186,6 @@ module.exports = {
                     });
             });
         }
-        // const provided = `Provided Command: \`/echo ${(content ? `content:${content}` : "")} ${(title ? `title:${title}` : "")} ${(description ? `description:${description}` : "")} ${(footer ? `footer:${footer}` : "")} ${(footer_pfp ? `footer_pfp:${footer_pfp}` : "")} ${(colour ? `colour:${colour}` : "")} ${(deleteTime ? `delete_time:${deleteTime}` : "")} ${(channel ? `channel:\`${channel}\`` : "")} ${(messageReplyID ? `message_reply_id:${messageReplyID}` : "")} ${(messageReplyPing ? `message_reply_ping:${messageReplyPing}` : "")}\``;
         if (typeof deleteTime === "number") {
             const time = Math.floor(new Date().getTime() / 1000) + deleteTime;
             interaction.editReply(`Done\nTime left: <t:${time}:R>`);

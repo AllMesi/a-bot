@@ -1,28 +1,27 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const allowed = ["956156042398556210", "675492571203764236"];
 const fs = require("fs");
 
 module.exports = {
     description: 'reloads a command',
-    data: new SlashCommandBuilder()
-        .addStringOption(option =>
-            option.setName('template_name')
-                .setDescription('The template name to create')
-                .setRequired(true)),
     async execute(interaction) {
         if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
-        const templateName = interaction.options.getString('template_name');
         const modal = new ModalBuilder()
             .setCustomId('templateModal')
             .setTitle('Make template');
 
+        const nameInput = new TextInputBuilder()
+            .setCustomId('templateNameInput')
+            .setLabel("Enter name:")
+            .setStyle(TextInputStyle.Short);
         const codeInput = new TextInputBuilder()
             .setCustomId('templateCodeInput')
             .setLabel("Enter code:")
             .setStyle(TextInputStyle.Paragraph);
 
         const code = new ActionRowBuilder().addComponents(codeInput);
-        modal.addComponents(code);
+        const name = new ActionRowBuilder().addComponents(nameInput);
+        modal.addComponents(name, code);
 
         await interaction.showModal(modal);
         const submitted = await interaction.awaitModalSubmit({
@@ -31,9 +30,12 @@ module.exports = {
             console.error(error);
             return null;
         });
-        await submitted.deferReply();
+        await submitted.deferReply({
+            ephemeral: true
+        });
         let codeText = submitted.fields.getTextInputValue('templateCodeInput');
+        let templateName = submitted.fields.getTextInputValue('templateNameInput');
         fs.writeFileSync(`./evalCodeTemplates/${templateName}`, codeText);
-        await submitted.editReply("Done");
+        await submitted.editReply(`Created template \`${templateName}\`\nWith code:\n\`\`\`js\n${codeText}\n\`\`\``);
     },
 };

@@ -1,14 +1,14 @@
 const str = `◜
 ◝
 ◞
-◟`
+◟`;
 const arr = str.split("\n");
 let i = 0;
 interaction.channel.send(arr[i]).then(message => {
   let interval;
   interval = setInterval(() => {
     i++;
-    if (i === 8) {
+    if (i >= 9) {
       clearInterval(interval);
       return message.delete();
     }

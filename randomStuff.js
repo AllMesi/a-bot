@@ -1,6 +1,6 @@
 module.exports = {
     stupitify: (input) => {
-        var stupit = [];
+        let stupit = [];
         const str = input;
         for (let i = 0; i < str.length; i++) {
             const char = str.charAt(i);
@@ -9,14 +9,14 @@ module.exports = {
         return stupit.join("");
     },
     genRandLetters: (amt, cs = "abcdefghijklmnopqrstuvwxyz") => {
-        var letters = [];
+        let letters = [];
         for (let i = 0; i < amt; i++) {
             letters.push(cs.charAt(Math.floor(Math.random() * cs.length)));
         }
         return letters.join("");
     },
     reverse: (input) => {
-        var letters = [];
+        let letters = [];
         for (let i = 0; i < input.length; i++) {
             letters.push(input.charAt(i));
         }

@@ -1,1 +1,0 @@
-interaction.channel.send(":fish:");

@@ -62,7 +62,7 @@ module.exports = {
             return null;
         });
         await submitted.deferReply();
-        var output = '';
+        let output = '';
         let codeText = submitted.fields.getTextInputValue('codeInput');
         capcon.startCapture(process.stdout, function (stdout) {
             output += stdout;

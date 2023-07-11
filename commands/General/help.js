@@ -3,9 +3,8 @@ const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 module.exports = {
     description: "Shows command sorted by categories",
     async execute(interaction) {
-        var categories = [];
-        var buttons = [];
-        var buttonRows = [];
+        let categories = [];
+        let buttons = [];
 
         interaction.client.commands.forEach(command => {
             if (!categories.includes(command.category)) {
@@ -20,10 +19,8 @@ module.exports = {
             }
         });
 
-        buttonRows.push(new ActionRowBuilder().addComponents(buttons));
-
         await interaction.reply({
-            components: buttonRows,
+            components: [new ActionRowBuilder().addComponents(buttons)],
             embeds: [{
                 title: `Help`,
                 description: "Click on a button to show commands for a category",
