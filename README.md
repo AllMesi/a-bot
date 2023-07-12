@@ -18,8 +18,6 @@ npm i
 After downloading the files make a new text file called __.env__. use this: 
 ```env
 token="<YOUR BOT TOKEN>"
-pastebin="[YOUR PASTEBIN KEY]"
-# pastebin doesnt have a use for now, just have it there for future uses
 ```
 
 You can get your bots token from the discord developer portal. https://discord.com/developers/applications

@@ -1,5 +1,6 @@
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-const { Collection } = require('discord.js');
+const { Collection, AttachmentBuilder } = require('discord.js');
+const { get } = require('sourcebin');
 
 module.exports = {
     async execute(interaction) {
@@ -99,6 +100,20 @@ module.exports = {
                             return;
                         }
                     }
+                });
+            } else if (id.startsWith("reb-")) {
+                id = id.slice(4);
+                await interaction.deferReply({
+                    ephemeral: true
+                });
+                const bin = await get({
+                    key: id
+                });
+                const outputFile = new AttachmentBuilder(Buffer.from(JSON.stringify(bin.files[0].content), 'utf-8'), {
+                    name: "export.json"
+                });
+                await interaction.editReply({
+                    files: [outputFile]
                 });
             }
         } else if (interaction.isAutocomplete()) {

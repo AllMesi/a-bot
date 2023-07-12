@@ -126,16 +126,22 @@ module.exports = {
                             .setCustomId(`${row + 1}1`)
                             .setLabel("\u200b")
                             .setEmoji((board[row][0][0] ? (board[row][0][1] ? "❌" : "⭕") : {}))
+                            .setDisabled(board[row][0][0])
+                            .setStyle((board[row][0][0] ? (board[row][0][1] ? ButtonStyle.Danger : ButtonStyle.Success) : ButtonStyle.Secondary))
                             .setStyle(ButtonStyle.Secondary),
                         new ButtonBuilder()
                             .setCustomId(`${row + 1}2`)
                             .setLabel("\u200b")
                             .setEmoji((board[row][1][0] ? (board[row][1][1] ? "❌" : "⭕") : {}))
+                            .setDisabled(board[row][1][0])
+                            .setStyle((board[row][1][0] ? (board[row][1][1] ? ButtonStyle.Danger : ButtonStyle.Success) : ButtonStyle.Secondary))
                             .setStyle(ButtonStyle.Secondary),
                         new ButtonBuilder()
                             .setCustomId(`${row + 1}3`)
                             .setLabel("\u200b")
                             .setEmoji((board[row][2][0] ? (board[row][2][1] ? "❌" : "⭕") : {}))
+                            .setDisabled(board[row][2][0])
+                            .setStyle((board[row][2][0] ? (board[row][2][1] ? ButtonStyle.Danger : ButtonStyle.Success) : ButtonStyle.Secondary))
                             .setStyle(ButtonStyle.Secondary)
                     );
                     const turnUser = (oppositeTurn ? user : interaction.user);
