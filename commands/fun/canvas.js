@@ -23,6 +23,7 @@ module.exports = {
         const buttons = new ActionRowBuilder();
         const buttons2 = new ActionRowBuilder();
         const buttons3 = new ActionRowBuilder();
+        const buttons4 = new ActionRowBuilder();
         buttons.addComponents(
             new ButtonBuilder()
                 .setCustomId("text")
@@ -69,6 +70,12 @@ module.exports = {
                 .setLabel("Reset Canvas")
                 .setStyle(ButtonStyle.Danger)
         );
+        buttons4.addComponents(
+            new ButtonBuilder()
+                .setLabel("@napi-rs/canvas")
+                .setStyle(ButtonStyle.Link)
+                .setURL("https://www.npmjs.com/package/@napi-rs/canvas")
+        );
 
         let update = async () => {
             context.fillStyle = `${bg}`;
@@ -85,11 +92,21 @@ module.exports = {
             });
         };
 
+        context.fillStyle = `${bg}`;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = 'white';
+        context.font = "32px Arial";
+        for (const func of drawArray) {
+            func(context);
+        }
+        const png = await canvas.encode('png');
+        const attachment = new AttachmentBuilder(png, { name: 'canvas.png' });
+
         const message = await interaction.reply({
-            components: [buttons, buttons2, buttons3],
-            ephemeral: true
+            components: [buttons, buttons2, buttons3, buttons4],
+            ephemeral: true,
+            files: [attachment]
         });
-        update();
         const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 3.6e+6 });
 
         collector.on("collect", async i => {
@@ -185,11 +202,13 @@ module.exports = {
                 const wInput = new TextInputBuilder()
                     .setCustomId('canvasWInput')
                     .setLabel("Enter width of canvas:")
+                    .setValue(String(canvas.width))
                     .setStyle(TextInputStyle.Short);
 
                 const hInput = new TextInputBuilder()
                     .setCustomId('canvasHInput')
                     .setLabel("Enter height of canvas:")
+                    .setValue(String(canvas.height))
                     .setStyle(TextInputStyle.Short);
 
                 const w = new ActionRowBuilder().addComponents(wInput);
@@ -538,6 +557,8 @@ module.exports = {
                 const png = await canvas.encode('png');
                 const attachment = new AttachmentBuilder(png, { name: 'canvas.png' });
                 const buttons = new ActionRowBuilder();
+
+                await i.deferUpdate();
                 let output = {
                     width: canvas.width,
                     height: canvas.height,
@@ -547,7 +568,19 @@ module.exports = {
 
                 for (const typeIndex in drawTypeArray) {
                     const object = drawTypeArray[typeIndex];
-                    output.objects.push(object);
+                    let outputStr = "";
+                    switch (object.type) {
+                        case "circ":
+                            outputStr = `${object.type},${object.x},${object.y},${object.colour || "#ffffff"},${object.radius}`;
+                            break;
+                        case "rect":
+                            outputStr = `${object.type},${object.x},${object.y},${object.colour || "#ffffff"},${object.w},${object.h}`;
+                            break;
+                        case "text":
+                            outputStr = `${object.type},${object.x},${object.y},${object.colour || "#ffffff"},${object.size},${object.contents}`;
+                            break;
+                    }
+                    output.objects.push(outputStr);
                 }
 
                 const bin = await create(
