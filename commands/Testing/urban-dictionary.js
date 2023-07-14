@@ -24,7 +24,7 @@ module.exports = {
         const buttons2 = new ActionRowBuilder();
 
         const addButtons = async (buttons, buttons2) => {
-            buttons.addComponents(...[
+            buttons.addComponents(
                 new ButtonBuilder()
                     .setCustomId("first")
                     .setStyle(ButtonStyle.Secondary)
@@ -45,7 +45,7 @@ module.exports = {
                     .setCustomId("page")
                     .setStyle(ButtonStyle.Secondary)
                     .setLabel("Page")
-            ]);
+            );
             buttons2.addComponents(
                 new ButtonBuilder()
                     .setCustomId("new")

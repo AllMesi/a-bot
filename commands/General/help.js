@@ -5,6 +5,7 @@ module.exports = {
     async execute(interaction) {
         let categories = [];
         let buttons = [];
+        let actionRows = [];
 
         interaction.client.commands.forEach(command => {
             if (!categories.includes(command.category)) {
@@ -16,11 +17,17 @@ module.exports = {
                         .setLabel(command.category)
                         .setStyle(ButtonStyle.Success)
                 );
+                if (buttons.length >= 4) {
+                    actionRows.push(new ActionRowBuilder().addComponents(buttons));
+                    buttons = [];
+                }
             }
         });
 
+        actionRows.push(new ActionRowBuilder().addComponents(buttons));
+
         await interaction.reply({
-            components: [new ActionRowBuilder().addComponents(buttons)],
+            components: actionRows,
             embeds: [{
                 title: `Help`,
                 description: "Click on a button to show commands for a category",

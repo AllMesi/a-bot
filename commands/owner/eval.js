@@ -1,6 +1,6 @@
 const capcon = require('capture-console');
 const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const allowed = ["956156042398556210", "675492571203764236" ];
+const allowed = ["956156042398556210", "675492571203764236"];
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 const fs = require("fs");
 
@@ -39,7 +39,11 @@ module.exports = {
                 .setAutocomplete(true)
         ),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) {
+            return interaction.reply({
+                files: ["https://http.cat/403.jpg"]
+            });
+        }
         const templateCode = interaction.options.getString('template');
         const modal = new ModalBuilder()
             .setCustomId('evalModal')

@@ -31,7 +31,7 @@ module.exports = {
         .addStringOption(option =>
             option.setName('theme')
                 .setDescription('Dark or light')
-                .setRequired(false).setChoices(...[
+                .setRequired(false).setChoices(
                     {
                         name: "Dark",
                         value: "dark"
@@ -40,7 +40,7 @@ module.exports = {
                         name: "Light",
                         value: "light"
                     }
-                ]))
+                ))
         .addIntegerOption(option =>
             option.setName("replies")
                 .setDescription("replies")

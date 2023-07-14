@@ -5,7 +5,9 @@ const fs = require("fs");
 module.exports = {
     description: 'reloads a command',
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) return interaction.reply({
+            files: ["https://http.cat/401.jpg"]
+        });
         const modal = new ModalBuilder()
             .setCustomId('templateModal')
             .setTitle('Make template');

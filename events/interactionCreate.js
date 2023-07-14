@@ -1,10 +1,26 @@
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 const { Collection, AttachmentBuilder } = require('discord.js');
 const { get } = require('sourcebin');
+const blacklisted = ["1040762702756331551"];
 
 module.exports = {
     async execute(interaction) {
         if (interaction.isChatInputCommand()) {
+            if (blacklisted.includes(interaction.user.id)) {
+                return interaction.reply({
+                    files: ["https://http.cat/403.jpg"]
+                });
+            }
+
+            setTimeout(() => {
+                if (!interaction.deferred && !interaction.replied) {
+                    return interaction.reply({
+                        files: ["https://http.cat/444.jpg"],
+                        ephemeral: true
+                    });
+                }
+            }, 1000);
+
             const command = interaction.client.commands.get(interaction.commandName);
 
             const { cooldowns } = interaction.client;

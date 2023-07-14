@@ -10,7 +10,11 @@ module.exports = {
                 .setRequired(true)
                 .setAutocomplete(true)),
     async execute(interaction) {
-        if (!allowed.includes(interaction.user.id)) return interaction.reply("how dare you even TRY to use this command you mere mortal");
+        if (!allowed.includes(interaction.user.id)) {
+            return interaction.reply({
+                files: ["https://http.cat/403.jpg"]
+            });
+        }
         const commandName = interaction.options.getString('command_name', true).toLowerCase();
         const command = interaction.client.commands.get(commandName);
 
@@ -33,15 +37,23 @@ module.exports = {
             newCommand.data.description = command.data.description || command.description || "No description found";
             interaction.client.commands.set(newCommand.data.name, newCommand);
             await interaction.reply(`Command \`${newCommand.data.name}\` was reloaded!`);
+
+            interaction.client.application.commands.fetch().then(commands => {
+                commands.forEach(command => {
+                    interaction.client.commands.get(command.name).name = command.name;
+                    interaction.client.commands.get(command.name).id = command.id;
+                    interaction.client.commands.get(command.name).description = command.description;
+                });
+            });
         } catch (error) {
             console.error(error);
-            await interaction.reply(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.stack}\``);
+            await interaction.reply(`There was an error while reloading ${command.name}\n\`\`\`${command.data.name}\`:\n\`${error.stack}\`\`\``);
         }
     },
     async autocomplete(interaction) {
         const focusedOption = interaction.options.getFocused(true);
 
-        const filtered = interaction.client.commands.filter(choice => choice.data.name.toLowerCase().includes(focusedOption.value.toLowerCase()));
+        const filtered = interaction.client.commands.filter(choice => choice.name.toLowerCase().includes(focusedOption.value.toLowerCase()));
 
         let options;
         if (filtered.length > 25) {
@@ -53,7 +65,7 @@ module.exports = {
         }
 
         await interaction.respond(
-            options.map(choice => ({ name: choice.data.name, value: choice.data.name })),
+            options.map(choice => ({ name: choice.name, value: choice.name })),
         );
     },
 };

@@ -54,7 +54,7 @@ module.exports = {
             option.setName('message_reply_ping')
                 .setDescription('Mention the user that made the message in the reply? (default: True or None)')
                 .setRequired(false)
-                .setChoices(...[
+                .setChoices(
                     {
                         name: "True",
                         value: "true"
@@ -63,7 +63,7 @@ module.exports = {
                         name: "False",
                         value: "false"
                     }
-                ])
+                )
         )
         .addIntegerOption(option =>
             option.setName("delete_time")
