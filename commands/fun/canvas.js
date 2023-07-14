@@ -12,7 +12,7 @@ function fillTextMultiLine(ctx, text, x, y) {
 }
 
 module.exports = {
-    description: 'this is currently very broken.',
+    description: 'do stuff on a canvas idk',
     async execute(interaction) {
         const canvas = Canvas.createCanvas(1280, 720);
         const context = canvas.getContext('2d');
