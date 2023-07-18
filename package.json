@@ -10,6 +10,7 @@
     "dotenv": "^16.0.3",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^5.1.0",
+    "imagescript": "^1.2.16",
     "neat-stack": "^1.0.1",
     "node-fetch": "^2.6.6",
     "pet-pet-gif": "^1.0.9",

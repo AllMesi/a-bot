@@ -20,8 +20,10 @@ module.exports = {
         }
         const commands = interaction.client.commands;
         for (const command of commands) {
-            delete require.cache[require.resolve(`../${command.category}/${command.data.name}.js`)];
-            interaction.client.commands.delete(command.data.name);
+            if (typeof command.data !== "undefined") {
+                delete require.cache[require.resolve(`../${command.category}/${command.data.name}.js`)];
+                interaction.client.commands.delete(command.data.name);
+            }
         }
         shell().then(([stdout]) => {
             interaction.editReply(stdout);
