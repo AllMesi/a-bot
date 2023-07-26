@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const roles = interaction.guild.roles.cache.filter(role => role.name === "");
 let vis = [];
 roles.forEach(role => {

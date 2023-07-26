@@ -99,14 +99,14 @@ module.exports = {
         // variable hell
         const avatar = interaction.user.displayAvatarURL({ extension: 'png' });
         const title = interaction.options.getString("title");
-        const description = interaction.options.getString("description");
         const footer = interaction.options.getString("footer") || null;
         const footer_pfp = (interaction.options.getBoolean("footer_pfp") ? avatar : null);
         const colour = interaction.options.getString("colour");
         const url = interaction.options.getString("url");
-        const content = interaction.options.getString("content") || "";
+        const content = (interaction.options.getString("content") || "").replaceAll("\\n", "\n");
         const deleteTime = interaction.options.getInteger("delete_time");
         const channel = interaction.options.getChannel("channel");
+        let description = interaction.options.getString("description");
         let attachments = [];
         for (let i = 1; i <= 5; i++) {
             const attachment = interaction.options.getAttachment(`attachment${i}`);
@@ -121,6 +121,9 @@ module.exports = {
                 content: "The embed must have a title or description",
                 ephemeral: true
             });
+        }
+        if (hasEmbed && typeof description === typeof "") {
+            description = description.replaceAll("\\n", "\n");
         }
         if (colour !== null && hasEmbed && !isValidHex(colour)) {
             return await interaction.editReply({

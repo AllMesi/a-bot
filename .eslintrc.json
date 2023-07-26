@@ -27,6 +27,7 @@
 		"space-in-parens": "error",
 		"space-infix-ops": "error",
 		"yoda": "error",
-		"no-control-regex": 0
+		"no-control-regex": 0,
+		"no-case-declarations": "off"
 	}
 }
